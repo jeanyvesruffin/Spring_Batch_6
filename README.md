@@ -3,24 +3,25 @@
 ## Architecture de Spring Batch 6
 
 ```mermaid
-flowchart TD
-    %% Définition des blocs avec une largeur fixe pour un alignement parfait des bords
-    A["<div style='width: 250px; text-align: center;'>Application</div>"]
-    B["<div style='width: 250px; text-align: center;'>Batch Core</div>"]
-    C["<div style='width: 250px; text-align: center;'>Batch Infrastructure</div>"]
+graph TD
+    %% Définition des blocs avec largeur identique
+    A["<div style='width:220px; text-align:center;'>Application</div>"]
+    B["<div style='width:220px; text-align:center;'>Batch Core</div>"]
+    C["<div style='width:220px; text-align:center;'>Batch Infrastructure</div>"]
 
-    %% Flèches centrales (Application <-> Batch Core <-> Batch Infrastructure)
+    %% 1. On force la colonne centrale (l'épine dorsale) de haut en bas
     A --> B
-    B -.-> A
     B --> C
+
+    %% 2. On ajoute les flèches de retour pointillées
+    B -.-> A
     C -.-> B
 
-    %% Flèches latérales (Application <-> Batch Infrastructure)
-    %% L'utilisation de ---> allonge le lien pour qu'il contourne proprement le bloc central
-    A ---> C
+    %% 3. On ajoute les flèches latérales de contournement (sans les rallonger)
+    A --> C
     C -.-> A
 
-    %% Styles des couleurs
+    %% Styles pour les couleurs exactes
     style A fill:#54a935,color:black,stroke:none,font-weight:bold
     style B fill:#4781a2,color:black,stroke:none,font-weight:bold
     style C fill:#fcc004,color:black,stroke:none,font-weight:bold
