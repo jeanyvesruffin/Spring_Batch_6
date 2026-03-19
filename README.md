@@ -35,3 +35,23 @@ Vous pouvez instancier le record d'une Person avec le prénom et le nom via le c
 En traitement par lots, il est courant d'ingérer des données, de les transformer, puis de les acheminer vers une autre destination. Ici, vous devez écrire un transformateur simple qui convertit les noms en majuscules.
 
 Voir fichier [Transforme datas](src/main/java/ruffinjy/spring_batch_demo/batch_processor/PersonItemProcessor.java).
+
+**PersonItemProcessor** implémente l'interface de Spring Batch **ItemProcessor**. Cela facilite l'intégration du code dans un traitement par lots. Conformément à l'interface, vous recevez un objet entrant **Person**, que vous transformez ensuite en un objet en majuscules Person.
+
+### Assemblage du job Batch
+
+Il vous faut maintenant mettre en place le traitement par lots. Spring Batch fournit de nombreuses classes utilitaires qui réduisent le besoin d'écrire du code personnalisé. Vous pouvez ainsi vous concentrer sur la logique métier.
+
+Pour configurer votre tâche, vous devez d'abord créer une classe **@Configuration** Spring comme dans l'exemple suivant [Configuration](src/main/java/ruffinjy/spring_batch_demo/configurations/BatchConfiguration.java). Cet exemple utilise une base de données en mémoire, ce qui signifie qu'une fois la tâche terminée, les données sont effacées. Ajoutez ensuite les beans suivants à votre classe **BatchConfiguration** pour définir les **@Bean** **reader**, **processor**, et un **writer**.
+
+Le premier bloc de code définit l'entrée, le processeur et la sortie.
+
+* **reader()** crée un **ItemReader**. Il recherche un fichier appelé _sample-data.csv_ et analyse chaque élément de ligne avec suffisamment d'informations pour le transformer en un objet **Person**.
+* **processor()** crée une instance de la fonction **PersonItemProcessor** que vous avez définie précédemment, destinée à convertir les données en majuscules.
+* **writer(DataSource)** crée un objet **ItemWriter**. Celui-ci est destiné au JDBC et obtient automatiquement un objet **DataSource** créé par Spring Boot. Il inclut l'instruction SQL nécessaire à l'insertion d'un seul enregistrement Person, piloté par des composants d'enregistrement Java.
+
+Les blocs suivants définie le **Job** (la tâche) et les **Step** (les étapes).
+
+* Les tâches sont composées **Step**, chacune pouvant impliquer un **reader**, un **processor**, et un **writer**.
+* Vous listez ensuite chaque **Step** (bien que cette tâche ne comporte qu'un seul step). La tâche se termine et l'API Java génère un **Step** parfaitement configurée.
+* Dans la définition d'un step, vous spécifiez la quantité de données à écrire simultanément. Ici, jusqu'à **3** enregistrements sont écrits à la fois. Ensuite, vous configurez le reader, processor, et writer à l'aide des beans injectés précédemment.
