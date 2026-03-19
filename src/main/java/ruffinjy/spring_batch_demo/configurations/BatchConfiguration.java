@@ -10,14 +10,14 @@ import org.springframework.batch.infrastructure.item.database.JdbcBatchItemWrite
 import org.springframework.batch.infrastructure.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.infrastructure.item.file.FlatFileItemReader;
 import org.springframework.batch.infrastructure.item.file.builder.FlatFileItemReaderBuilder;
-import org.springframework.boot.batch.autoconfigure.BatchProperties.Job;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-
+import org.springframework.batch.core.job.Job;
 import ruffinjy.spring_batch_demo.batch_processor.PersonItemProcessor;
 import ruffinjy.spring_batch_demo.domain.Person;
+import ruffinjy.spring_batch_demo.notifications.JobCompletionNotificationListener;
 
 @Configuration
 public class BatchConfiguration {
